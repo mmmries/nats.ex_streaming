@@ -35,7 +35,7 @@ defmodule Gnat.Streaming.Subscription do
     :gen_statem.start_link(__MODULE__, settings, options)
   end
 
-  @spec subscribed?(:gen_statem.server_ref()) :: true | false
+  @spec subscribed?(GenServer.server()) :: true | false
   def subscribed?(server) do
     :gen_statem.call(server, :subscribed?)
   end
