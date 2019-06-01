@@ -1,8 +1,8 @@
-defmodule GnatStreamingTest do
+defmodule Gnat.StreamingTest do
   use ExUnit.Case
-  doctest GnatStreaming
+  doctest Gnat.Streaming
 
   test "greets the world" do
-    assert GnatStreaming.hello() == :world
+    assert Gnat.Streaming.hello() == :world
   end
 end
