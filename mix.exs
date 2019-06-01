@@ -24,6 +24,7 @@ defmodule GnatStreaming.MixProject do
     [
       {:gnat, "~> 0.6"},
       {:protobuf, "~> 0.6"},
+      {:statix, "~> 1.1", only: :dev},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
     ]
   end
