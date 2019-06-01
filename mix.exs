@@ -5,10 +5,10 @@ defmodule GnatStreaming.MixProject do
     [
       app: :gnat_streaming,
       version: "0.1.0",
-      elixir: "~> 1.8",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [ignore_warnings: ".dialyzer_ignore.exs"],
+      dialyzer: [ignore_warnings: ".dialyzer_ignore.exs"]
     ]
   end
 
@@ -24,7 +24,7 @@ defmodule GnatStreaming.MixProject do
     [
       {:gnat, "~> 0.6"},
       {:protobuf, "~> 0.6"},
-      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
     ]
   end
 end
