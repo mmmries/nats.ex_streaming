@@ -34,7 +34,7 @@ The client process is a state machine that finds and monitors the `Gnat` process
 
 We can also start `Streaming.Subscription` processes that find and monitor the `Streaming.Client` process (as well as monitoring the `Gnat` process).
 These processes wait for the client to be registered and then use metadata about the client to open a subscription.
-As messages start to come in for the given topic, they are decoded and we run the `consuming_function` specified when starting that subscription in a [Task](https://github.com/elixir-lang/elixir/blob/v1.9.1/lib/elixir/lib/task.ex).
+As messages start to come in for the given topic, they are decoded and we run the `consuming_function` specified when starting that subscription in a [Task](https://hexdocs.pm/elixir/1.9.1/Task.html).
 Your `consuming_function` should accept a single argument (a `Streaming.Message` struct), and should call `Message.ack/1` once you have ensured that it has been handled.
 
 > Since each message is handled in its own process, this can quickly saturate all cores on a machine.
