@@ -18,9 +18,35 @@ def deps do
 end
 ```
 
+## Architecture
+
+In the long run, I hope to encompass all the common use-cases of NATS streaming into a simple API in the `Gnat.Streaming` module.
+Since I don't yet know what the common use-cases are, and what will be required in terms of structure, I am mostly focused on the level of abstraction below that.
+Currently, I'm thinking we will end up with a process architecture like:
+
+![Process Architecture](ProcessArchitecture.png)
+
+We will leave the details of managing TCP/TLS connections and the low-level protocol to the [nats.ex library](https://github.com/nats-io/nats.ex).
+In order to do any NATS streaming activities, we start up a `Streaming.Client` process which is given the name of a `Gnat` (provided by nats.ex).
+The client process is a state machine that finds and monitors the `Gnat` process and registers itself as a nats streaming client.
+
+![Client State Machine](ClientStateMachine.png)
+
+We can also start `Streaming.Subscription` processes that find and monitor the `Streaming.Client` process (as well as monitoring the `Gnat` process).
+These processes wait for the client to be registered and then use metadata about the client to open a subscription.
+As messages start to come in for the given topic, they are decoded and we run the `consuming_function` specified when starting that subscription in a [Task](https://github.com/elixir-lang/elixir/blob/v1.9.1/lib/elixir/lib/task.ex).
+Your `consuming_function` should accept a single argument (a `Streaming.Message` struct), and should call `Message.ack/1` once you have ensured that it has been handled.
+
+> Since each message is handled in its own process, this can quickly saturate all cores on a machine.
+> Please use the `max_in_flight` option when opening your subscription to limit how many message you want to run in parallel.
+
+Subscriptions monitor the `Streaming.Client` and the `Gnat` connection to automatically re-subscribe if the connection goes down temporarily.
+
+![Subscription State Machine](SubscriptionStateMachine.png)
+
 ## Benchmarking
 
-Most of the performance concerns I have for this library around steady-state throughput.
+Most of the performance concerns I have for this library are around steady-state throughput.
 So I've opted for a benchmarking strategy where data is collected into an external service.
 In order to make this all work I start things up like this:
 
