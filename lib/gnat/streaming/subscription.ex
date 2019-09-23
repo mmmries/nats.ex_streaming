@@ -234,6 +234,9 @@ defmodule Gnat.Streaming.Subscription do
     {:keep_state_and_data, [{:reply, from, true}]}
   end
 
+  # this function is called inside of a Task that gets kicked off when we receive a message
+  # for our subscription.
+  @spec consume_message(binary(), {atom(), atom()}, pid(), String.t()) :: nil
   def consume_message(protobuf, {mod, fun}, connection_pid, ack_subject) do
     pub_msg = Protocol.MsgProto.decode(protobuf)
 
