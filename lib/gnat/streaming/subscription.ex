@@ -11,6 +11,7 @@ defmodule Gnat.Streaming.Subscription do
             durable_name: nil,
             inbox: nil,
             max_in_flight: 100,
+            queue_group: nil,
             sub_subject: nil,
             subject: nil,
             task_supervisor_pid: nil
@@ -25,6 +26,7 @@ defmodule Gnat.Streaming.Subscription do
           durable_name: String.t() | nil,
           inbox: String.t() | nil,
           max_in_flight: non_neg_integer(),
+          queue_group: String.t() | nil,
           sub_subject: String.t(),
           subject: String.t(),
           task_supervisor_pid: pid()
@@ -78,10 +80,12 @@ defmodule Gnat.Streaming.Subscription do
     subject = Keyword.fetch!(settings, :subject)
 
     durable_name = Keyword.get(settings, :durable_name)
+    queue_group = Keyword.get(settings, :queue_group)
     %__MODULE__{
       client_name: client_name,
       consuming_function: {mod, fun},
       durable_name: durable_name,
+      queue_group: queue_group,
       subject: subject,
       task_supervisor_pid: task_supervisor_pid
     }
@@ -137,6 +141,7 @@ defmodule Gnat.Streaming.Subscription do
         durableName: state.durable_name,
         inbox: state.inbox,
         maxInFlight: state.max_in_flight,
+        qGroup: state.queue_group,
         subject: state.subject
       )
       |> Protocol.SubscriptionRequest.encode()
