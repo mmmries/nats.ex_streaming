@@ -8,6 +8,7 @@ defmodule Gnat.Streaming.Subscription do
             client_name: nil,
             consuming_function: nil,
             connection_pid: nil,
+            durable_name: nil,
             inbox: nil,
             max_in_flight: 100,
             sub_subject: nil,
@@ -21,6 +22,7 @@ defmodule Gnat.Streaming.Subscription do
           client_name: atom(),
           consuming_function: {atom(), atom()},
           connection_pid: pid() | nil,
+          durable_name: String.t() | nil,
           inbox: String.t() | nil,
           max_in_flight: non_neg_integer(),
           sub_subject: String.t(),
@@ -75,9 +77,11 @@ defmodule Gnat.Streaming.Subscription do
     {mod, fun} = Keyword.fetch!(settings, :consuming_function)
     subject = Keyword.fetch!(settings, :subject)
 
+    durable_name = Keyword.get(settings, :durable_name)
     %__MODULE__{
       client_name: client_name,
       consuming_function: {mod, fun},
+      durable_name: durable_name,
       subject: subject,
       task_supervisor_pid: task_supervisor_pid
     }
@@ -130,6 +134,7 @@ defmodule Gnat.Streaming.Subscription do
       Protocol.SubscriptionRequest.new(
         ackWaitInSecs: state.ack_wait_in_sec,
         clientID: state.client_id,
+        durableName: state.durable_name,
         inbox: state.inbox,
         maxInFlight: state.max_in_flight,
         subject: state.subject
