@@ -12,6 +12,9 @@ defmodule Gnat.Streaming.Subscription do
             inbox: nil,
             max_in_flight: 100,
             queue_group: nil,
+            start_position: nil,
+            start_sequence: nil,
+            start_time_delta: nil,
             sub_subject: nil,
             subject: nil,
             task_supervisor_pid: nil
@@ -27,6 +30,10 @@ defmodule Gnat.Streaming.Subscription do
           inbox: String.t() | nil,
           max_in_flight: non_neg_integer(),
           queue_group: String.t() | nil,
+          start_position:
+            :first | :last_received | :new_only | :sequence_start | :time_delta_start | nil,
+          start_sequence: non_neg_integer | nil,
+          start_time_delta: integer | nil,
           sub_subject: String.t(),
           subject: String.t(),
           task_supervisor_pid: pid()
@@ -34,6 +41,7 @@ defmodule Gnat.Streaming.Subscription do
 
   require Logger
   alias Gnat.Streaming.{Client, Protocol}
+  alias Gnat.Streaming.Protocol.StartPosition
 
   def start_link(settings, options \\ []) do
     :gen_statem.start_link(__MODULE__, settings, options)
@@ -81,15 +89,29 @@ defmodule Gnat.Streaming.Subscription do
 
     durable_name = Keyword.get(settings, :durable_name)
     queue_group = Keyword.get(settings, :queue_group)
+    start_position = settings |> Keyword.get(:start_position) |> map_to_start_position_value()
+    start_sequence = Keyword.get(settings, :start_sequence)
+    start_time_delta = Keyword.get(settings, :start_time_delta)
+
     %__MODULE__{
       client_name: client_name,
       consuming_function: {mod, fun},
       durable_name: durable_name,
       queue_group: queue_group,
+      start_position: start_position,
+      start_sequence: start_sequence,
+      start_time_delta: start_time_delta,
       subject: subject,
       task_supervisor_pid: task_supervisor_pid
     }
   end
+
+  defp map_to_start_position_value(nil), do: nil
+  defp map_to_start_position_value(:first), do: StartPosition.value(:First)
+  defp map_to_start_position_value(:last_received), do: StartPosition.value(:LastReceived)
+  defp map_to_start_position_value(:new_only), do: StartPosition.value(:NewOnly)
+  defp map_to_start_position_value(:sequence_start), do: StartPosition.value(:SequenceStart)
+  defp map_to_start_position_value(:time_delta_start), do: StartPosition.value(:TimeDeltaStart)
 
   @doc false
   def disconnected(:internal, :connect, %__MODULE__{client_name: client_name}) do
@@ -142,6 +164,9 @@ defmodule Gnat.Streaming.Subscription do
         inbox: state.inbox,
         maxInFlight: state.max_in_flight,
         qGroup: state.queue_group,
+        startPosition: state.start_position,
+        startSequence: state.start_sequence,
+        startTimeDelta: state.start_time_delta,
         subject: state.subject
       )
       |> Protocol.SubscriptionRequest.encode()
