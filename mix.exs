@@ -3,12 +3,17 @@ defmodule GnatStreaming.MixProject do
 
   def project do
     [
-      app: :gnat_streaming,
+      app: :nats_streaming,
       version: "0.0.1",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [ignore_warnings: ".dialyzer_ignore.exs"]
+      dialyzer: [ignore_warnings: ".dialyzer_ignore.exs"],
+      description: "BETA support for interacting with a NATS streaming server",
+      package: [
+        licenses: ["MIT"],
+        links: %{"github" => "https://github.com/mmmries/nats.ex_streaming"}
+      ]
     ]
   end
 
@@ -25,7 +30,8 @@ defmodule GnatStreaming.MixProject do
       {:gnat, "~> 0.6"},
       {:protobuf, "~> 0.6"},
       {:statix, "~> 1.1", only: :dev},
-      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev, :test], runtime: false},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 end
