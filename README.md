@@ -18,6 +18,9 @@ def deps do
 end
 ```
 
+Then you'll need to supervise a connection, a client and as many subscriptions as you care to setup.
+An example of all of this can be seen in https://github.com/mmmries/nats_streaming_example (you can see the specific diff [here](https://github.com/mmmries/nats_streaming_example/commit/765a6abf049985baf8710855dd1069edb0291ffb))
+
 ## Architecture
 
 In the long run, I hope to encompass all the common use-cases of NATS streaming into a simple API in the `Nats.Streaming` module.
