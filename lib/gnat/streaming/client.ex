@@ -77,12 +77,21 @@ defmodule Gnat.Streaming.Client do
   end
 
   @impl :gen_statem
-  def terminate(:shutdown, _state, _data) do
-    Logger.error(
-      "#{__MODULE__} TODO - I should send a CloseRequest to notify the broker that I'm going away"
-    )
+  def terminate(:shutdown, state, _data) do
+    req =
+      Protocol.CloseRequest.new(clientID: state.client_id)
+      |> Protocol.CloseRequest.encode()
 
-    # TODO Send CloseRequest https://nats.io/documentation/streaming/nats-streaming-protocol/#CLOSEREQ
+    case Gnat.request(state.connection_pid, state.close_subject, req) do
+      {:ok, %{body: msg}} ->
+        msg = Protocol.CloseResponse.decode(msg)
+        Logger.debug("#{__MODULE__} TODO - Handle error attribute #{inspect(msg)}")
+
+      {:error, reason} ->
+        Logger.error("Failed to close connection: #{inspect(reason)}")
+    end
+
+    :ok
   end
 
   def terminate(reason, _state, _data) do
