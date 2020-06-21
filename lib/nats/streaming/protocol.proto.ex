@@ -8,11 +8,11 @@ defmodule Nats.Streaming.Protocol.StartPosition do
 
   @type t :: integer | :NewOnly | :LastReceived | :TimeDeltaStart | :SequenceStart | :First
 
-  field :NewOnly, 0
-  field :LastReceived, 1
-  field :TimeDeltaStart, 2
-  field :SequenceStart, 3
-  field :First, 4
+  field(:NewOnly, 0)
+  field(:LastReceived, 1)
+  field(:TimeDeltaStart, 2)
+  field(:SequenceStart, 3)
+  field(:First, 4)
 end
 
 defmodule Nats.Streaming.Protocol.PubMsg do
@@ -30,13 +30,13 @@ defmodule Nats.Streaming.Protocol.PubMsg do
         }
   defstruct [:clientID, :guid, :subject, :reply, :data, :connID, :sha256]
 
-  field :clientID, 1, type: :string
-  field :guid, 2, type: :string
-  field :subject, 3, type: :string
-  field :reply, 4, type: :string
-  field :data, 5, type: :bytes
-  field :connID, 6, type: :bytes
-  field :sha256, 10, type: :bytes
+  field(:clientID, 1, type: :string)
+  field(:guid, 2, type: :string)
+  field(:subject, 3, type: :string)
+  field(:reply, 4, type: :string)
+  field(:data, 5, type: :bytes)
+  field(:connID, 6, type: :bytes)
+  field(:sha256, 10, type: :bytes)
 end
 
 defmodule Nats.Streaming.Protocol.PubAck do
@@ -49,8 +49,8 @@ defmodule Nats.Streaming.Protocol.PubAck do
         }
   defstruct [:guid, :error]
 
-  field :guid, 1, type: :string
-  field :error, 2, type: :string
+  field(:guid, 1, type: :string)
+  field(:error, 2, type: :string)
 end
 
 defmodule Nats.Streaming.Protocol.MsgProto do
@@ -78,14 +78,14 @@ defmodule Nats.Streaming.Protocol.MsgProto do
     :CRC32
   ]
 
-  field :sequence, 1, type: :uint64
-  field :subject, 2, type: :string
-  field :reply, 3, type: :string
-  field :data, 4, type: :bytes
-  field :timestamp, 5, type: :int64
-  field :redelivered, 6, type: :bool
-  field :redeliveryCount, 7, type: :uint32
-  field :CRC32, 10, type: :uint32
+  field(:sequence, 1, type: :uint64)
+  field(:subject, 2, type: :string)
+  field(:reply, 3, type: :string)
+  field(:data, 4, type: :bytes)
+  field(:timestamp, 5, type: :int64)
+  field(:redelivered, 6, type: :bool)
+  field(:redeliveryCount, 7, type: :uint32)
+  field(:CRC32, 10, type: :uint32)
 end
 
 defmodule Nats.Streaming.Protocol.Ack do
@@ -98,8 +98,8 @@ defmodule Nats.Streaming.Protocol.Ack do
         }
   defstruct [:subject, :sequence]
 
-  field :subject, 1, type: :string
-  field :sequence, 2, type: :uint64
+  field(:subject, 1, type: :string)
+  field(:sequence, 2, type: :uint64)
 end
 
 defmodule Nats.Streaming.Protocol.ConnectRequest do
@@ -116,12 +116,12 @@ defmodule Nats.Streaming.Protocol.ConnectRequest do
         }
   defstruct [:clientID, :heartbeatInbox, :protocol, :connID, :pingInterval, :pingMaxOut]
 
-  field :clientID, 1, type: :string
-  field :heartbeatInbox, 2, type: :string
-  field :protocol, 3, type: :int32
-  field :connID, 4, type: :bytes
-  field :pingInterval, 5, type: :int32
-  field :pingMaxOut, 6, type: :int32
+  field(:clientID, 1, type: :string)
+  field(:heartbeatInbox, 2, type: :string)
+  field(:protocol, 3, type: :int32)
+  field(:connID, 4, type: :bytes)
+  field(:pingInterval, 5, type: :int32)
+  field(:pingMaxOut, 6, type: :int32)
 end
 
 defmodule Nats.Streaming.Protocol.ConnectResponse do
@@ -155,17 +155,17 @@ defmodule Nats.Streaming.Protocol.ConnectResponse do
     :publicKey
   ]
 
-  field :pubPrefix, 1, type: :string
-  field :subRequests, 2, type: :string
-  field :unsubRequests, 3, type: :string
-  field :closeRequests, 4, type: :string
-  field :error, 5, type: :string
-  field :subCloseRequests, 6, type: :string
-  field :pingRequests, 7, type: :string
-  field :pingInterval, 8, type: :int32
-  field :pingMaxOut, 9, type: :int32
-  field :protocol, 10, type: :int32
-  field :publicKey, 100, type: :string
+  field(:pubPrefix, 1, type: :string)
+  field(:subRequests, 2, type: :string)
+  field(:unsubRequests, 3, type: :string)
+  field(:closeRequests, 4, type: :string)
+  field(:error, 5, type: :string)
+  field(:subCloseRequests, 6, type: :string)
+  field(:pingRequests, 7, type: :string)
+  field(:pingInterval, 8, type: :int32)
+  field(:pingMaxOut, 9, type: :int32)
+  field(:protocol, 10, type: :int32)
+  field(:publicKey, 100, type: :string)
 end
 
 defmodule Nats.Streaming.Protocol.Ping do
@@ -177,7 +177,7 @@ defmodule Nats.Streaming.Protocol.Ping do
         }
   defstruct [:connID]
 
-  field :connID, 1, type: :bytes
+  field(:connID, 1, type: :bytes)
 end
 
 defmodule Nats.Streaming.Protocol.PingResponse do
@@ -189,7 +189,7 @@ defmodule Nats.Streaming.Protocol.PingResponse do
         }
   defstruct [:error]
 
-  field :error, 1, type: :string
+  field(:error, 1, type: :string)
 end
 
 defmodule Nats.Streaming.Protocol.SubscriptionRequest do
@@ -221,16 +221,16 @@ defmodule Nats.Streaming.Protocol.SubscriptionRequest do
     :startTimeDelta
   ]
 
-  field :clientID, 1, type: :string
-  field :subject, 2, type: :string
-  field :qGroup, 3, type: :string
-  field :inbox, 4, type: :string
-  field :maxInFlight, 5, type: :int32
-  field :ackWaitInSecs, 6, type: :int32
-  field :durableName, 7, type: :string
-  field :startPosition, 10, type: Nats.Streaming.Protocol.StartPosition, enum: true
-  field :startSequence, 11, type: :uint64
-  field :startTimeDelta, 12, type: :int64
+  field(:clientID, 1, type: :string)
+  field(:subject, 2, type: :string)
+  field(:qGroup, 3, type: :string)
+  field(:inbox, 4, type: :string)
+  field(:maxInFlight, 5, type: :int32)
+  field(:ackWaitInSecs, 6, type: :int32)
+  field(:durableName, 7, type: :string)
+  field(:startPosition, 10, type: Nats.Streaming.Protocol.StartPosition, enum: true)
+  field(:startSequence, 11, type: :uint64)
+  field(:startTimeDelta, 12, type: :int64)
 end
 
 defmodule Nats.Streaming.Protocol.SubscriptionResponse do
@@ -243,8 +243,8 @@ defmodule Nats.Streaming.Protocol.SubscriptionResponse do
         }
   defstruct [:ackInbox, :error]
 
-  field :ackInbox, 2, type: :string
-  field :error, 3, type: :string
+  field(:ackInbox, 2, type: :string)
+  field(:error, 3, type: :string)
 end
 
 defmodule Nats.Streaming.Protocol.UnsubscribeRequest do
@@ -259,10 +259,10 @@ defmodule Nats.Streaming.Protocol.UnsubscribeRequest do
         }
   defstruct [:clientID, :subject, :inbox, :durableName]
 
-  field :clientID, 1, type: :string
-  field :subject, 2, type: :string
-  field :inbox, 3, type: :string
-  field :durableName, 4, type: :string
+  field(:clientID, 1, type: :string)
+  field(:subject, 2, type: :string)
+  field(:inbox, 3, type: :string)
+  field(:durableName, 4, type: :string)
 end
 
 defmodule Nats.Streaming.Protocol.CloseRequest do
@@ -274,7 +274,7 @@ defmodule Nats.Streaming.Protocol.CloseRequest do
         }
   defstruct [:clientID]
 
-  field :clientID, 1, type: :string
+  field(:clientID, 1, type: :string)
 end
 
 defmodule Nats.Streaming.Protocol.CloseResponse do
@@ -286,5 +286,5 @@ defmodule Nats.Streaming.Protocol.CloseResponse do
         }
   defstruct [:error]
 
-  field :error, 1, type: :string
+  field(:error, 1, type: :string)
 end
