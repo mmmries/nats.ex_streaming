@@ -1,4 +1,4 @@
-# GnatStreaming
+# Nats Streaming
 
 A [NATS Streaming](https://nats.io/documentation/streaming/nats-streaming-intro/) client for Elixir.
 
@@ -13,14 +13,14 @@ To use this, just add it to your mix deps.
 ```elixir
 def deps do
   [
-    {:gnat_streaming, "~> 0.0.1"}
+    {:nats_streaming, "~> 0.0.2"}
   ]
 end
 ```
 
 ## Architecture
 
-In the long run, I hope to encompass all the common use-cases of NATS streaming into a simple API in the `Gnat.Streaming` module.
+In the long run, I hope to encompass all the common use-cases of NATS streaming into a simple API in the `Nats.Streaming` module.
 Since I don't yet know what the common use-cases are, and what will be required in terms of structure, I am mostly focused on the level of abstraction below that.
 Currently, I'm thinking we will end up with a process architecture like:
 

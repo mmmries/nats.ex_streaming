@@ -6,7 +6,7 @@ defmodule EndToEndTest do
   end
 
   def wait_for_subscription_to_be_subscribed(pid) do
-    case Gnat.Streaming.Subscription.subscribed?(pid) do
+    case Nats.Streaming.Subscription.subscribed?(pid) do
       false ->
         :timer.sleep(10)
         wait_for_subscription_to_be_subscribed(pid)
@@ -22,12 +22,12 @@ defmodule EndToEndTest do
     {:ok, gnat} = Gnat.start_link(%{}, name: :streaming_connection)
 
     {:ok, _client} =
-      Gnat.Streaming.Client.start_link([connection_name: :streaming_connection],
+      Nats.Streaming.Client.start_link([connection_name: :streaming_connection],
         name: :streaming_client
       )
 
     {:ok, subscription} =
-      Gnat.Streaming.Subscription.start_link(
+      Nats.Streaming.Subscription.start_link(
         client_name: :streaming_client,
         subject: "ohai",
         consuming_function: {EndToEndTest, :consume}
@@ -35,7 +35,7 @@ defmodule EndToEndTest do
 
     wait_for_subscription_to_be_subscribed(subscription)
 
-    Gnat.Streaming.Client.pub(:streaming_client, "ohai", "What's up?")
+    Nats.Streaming.Client.pub(:streaming_client, "ohai", "What's up?")
     assert_receive {:message_received, msg}, 1_000
     assert msg.connection_pid == gnat
     assert msg.data == "What's up?"
@@ -44,6 +44,6 @@ defmodule EndToEndTest do
     assert msg.sequence >= 0
     assert msg.subject == "ohai"
     assert msg.timestamp >= 0
-    assert Gnat.Streaming.Message.ack(msg) == :ok
+    assert Nats.Streaming.Message.ack(msg) == :ok
   end
 end

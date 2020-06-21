@@ -1,4 +1,4 @@
-defmodule Gnat.Streaming.Message do
+defmodule Nats.Streaming.Message do
   @enforce_keys [
     :ack_subject,
     :connection_pid,
@@ -20,7 +20,7 @@ defmodule Gnat.Streaming.Message do
     :timestamp
   ]
 
-  alias Gnat.Streaming.Protocol.Ack
+  alias Nats.Streaming.Protocol.Ack
 
   def ack(%__MODULE__{} = message) do
     %__MODULE__{

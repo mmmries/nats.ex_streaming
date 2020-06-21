@@ -1,4 +1,4 @@
-defmodule Gnat.Streaming.Client do
+defmodule Nats.Streaming.Client do
   @behaviour :gen_statem
 
   @enforce_keys [:client_id, :conn_id, :connection_name]
@@ -24,7 +24,7 @@ defmodule Gnat.Streaming.Client do
         }
 
   require Logger
-  alias Gnat.Streaming.Protocol
+  alias Nats.Streaming.Protocol
 
   def start_link(settings, options \\ []) do
     case Keyword.get(options, :name) do

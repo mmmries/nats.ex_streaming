@@ -1,4 +1,4 @@
-defmodule Gnat.Streaming.Subscription do
+defmodule Nats.Streaming.Subscription do
   @behaviour :gen_statem
 
   @enforce_keys [:client_name, :consuming_function, :subject, :task_supervisor_pid]
@@ -40,8 +40,8 @@ defmodule Gnat.Streaming.Subscription do
         }
 
   require Logger
-  alias Gnat.Streaming.{Client, Protocol}
-  alias Gnat.Streaming.Protocol.StartPosition
+  alias Nats.Streaming.{Client, Protocol}
+  alias Nats.Streaming.Protocol.StartPosition
 
   def start_link(settings, options \\ []) do
     :gen_statem.start_link(__MODULE__, settings, options)
@@ -275,7 +275,7 @@ defmodule Gnat.Streaming.Subscription do
   def consume_message(protobuf, {mod, fun}, connection_pid, ack_subject) do
     pub_msg = Protocol.MsgProto.decode(protobuf)
 
-    message = %Gnat.Streaming.Message{
+    message = %Nats.Streaming.Message{
       ack_subject: ack_subject,
       connection_pid: connection_pid,
       data: pub_msg.data,

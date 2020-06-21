@@ -4,7 +4,7 @@ end
 Gnat.Statix.connect()
 
 {:ok, gnat} = Gnat.start_link(%{}, name: :streaming_connection)
-{:ok, client} = Gnat.Streaming.Client.start_link([connection_name: :streaming_connection], name: :streaming_client)
+{:ok, client} = Nats.Streaming.Client.start_link([connection_name: :streaming_connection], name: :streaming_client)
 
 tasks = Enum.map(1..16, fn(_i) ->
   Task.async(fn ->

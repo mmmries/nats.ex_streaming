@@ -1,8 +1,8 @@
-defmodule Gnat.Streaming.ClientTest do
+defmodule Nats.Streaming.ClientTest do
   use ExUnit.Case, async: true
-  alias Gnat.Streaming.Client
+  alias Nats.Streaming.Client
 
-  @connect_response Gnat.Streaming.Protocol.ConnectResponse.new(
+  @connect_response Nats.Streaming.Protocol.ConnectResponse.new(
                       closeRequests: "test-cluster.abc123.close",
                       pubPrefix: "test-cluster.abc123.pub",
                       subRequests: "test-cluster.abc123.sub",

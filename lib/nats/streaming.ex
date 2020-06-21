@@ -1,4 +1,4 @@
-defmodule Gnat.Streaming do
+defmodule Nats.Streaming do
   use Supervisor
 
   def hello, do: :world

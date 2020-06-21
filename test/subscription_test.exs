@@ -1,8 +1,8 @@
-defmodule Gnat.Streaming.SubscriptionTest do
+defmodule Nats.Streaming.SubscriptionTest do
   use ExUnit.Case, async: true
-  alias Gnat.Streaming.Subscription
+  alias Nats.Streaming.Subscription
 
-  @subscription_response Gnat.Streaming.Protocol.SubscriptionResponse.new(
+  @subscription_response Nats.Streaming.Protocol.SubscriptionResponse.new(
                            ackInbox: "pawnee.swansonLane"
                          )
 
