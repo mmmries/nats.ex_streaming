@@ -3,6 +3,7 @@ defmodule Nats.Streaming.Client do
 
   @enforce_keys [:client_id, :conn_id, :connection_name]
   defstruct client_id: nil,
+            cluster_id: "test-cluster",
             conn_id: nil,
             connection_name: nil,
             connection_pid: nil,
@@ -14,6 +15,7 @@ defmodule Nats.Streaming.Client do
 
   @type t :: %__MODULE__{
           client_id: String.t(),
+          cluster_id: String.t(),
           conn_id: String.t(),
           connection_name: atom(),
           connection_pid: pid() | nil,
@@ -112,6 +114,7 @@ defmodule Nats.Streaming.Client do
 
     %__MODULE__{
       client_id: client_id,
+      cluster_id: Keyword.get(settings, :cluster_id, "test-cluster"),
       conn_id: conn_id,
       connection_name: connection_name,
       heartbeat_subject: heartbeat_subject
@@ -157,7 +160,7 @@ defmodule Nats.Streaming.Client do
       )
       |> Protocol.ConnectRequest.encode()
 
-    case Gnat.request(state.connection_pid, "_STAN.discover.test-cluster", req) do
+    case Gnat.request(state.connection_pid, "_STAN.discover.#{state.cluster_id}", req) do
       {:ok, %{body: msg}} ->
         msg = Protocol.ConnectResponse.decode(msg)
         actions = [{:next_event, :internal, {:connect_response, msg}}]
