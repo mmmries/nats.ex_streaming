@@ -7,6 +7,7 @@ defmodule Nats.Streaming.Subscription do
             client_id: nil,
             client_name: nil,
             consuming_function: nil,
+            consuming_in_order: false,
             connection_pid: nil,
             durable_name: nil,
             inbox: nil,
@@ -25,6 +26,7 @@ defmodule Nats.Streaming.Subscription do
           client_id: String.t() | nil,
           client_name: atom(),
           consuming_function: {atom(), atom()},
+          consuming_in_order: Boolean.t() | nil,
           connection_pid: pid() | nil,
           durable_name: String.t() | nil,
           inbox: String.t() | nil,
@@ -87,6 +89,7 @@ defmodule Nats.Streaming.Subscription do
     {mod, fun} = Keyword.fetch!(settings, :consuming_function)
     subject = Keyword.fetch!(settings, :subject)
 
+    in_order = Keyword.get(settings, :consuming_in_order)
     durable_name = Keyword.get(settings, :durable_name)
     queue_group = Keyword.get(settings, :queue_group)
     start_position = settings |> Keyword.get(:start_position) |> map_to_start_position_value()
@@ -96,6 +99,7 @@ defmodule Nats.Streaming.Subscription do
     %__MODULE__{
       client_name: client_name,
       consuming_function: {mod, fun},
+      consuming_in_order: in_order,
       durable_name: durable_name,
       queue_group: queue_group,
       start_position: start_position,
@@ -255,12 +259,16 @@ defmodule Nats.Streaming.Subscription do
   end
 
   def subscribed(:info, {:msg, %{body: protobuf}}, %__MODULE__{} = state) do
-    Task.Supervisor.async_nolink(state.task_supervisor_pid, __MODULE__, :consume_message, [
-      protobuf,
-      state.consuming_function,
-      state.connection_pid,
-      state.ack_subject
-    ])
+    if state.consuming_in_order do
+      consume_message(protobuf, state.consuming_function, state.connection_pid, state.ack_subject)
+    else
+      Task.Supervisor.async_nolink(state.task_supervisor_pid, __MODULE__, :consume_message, [
+        protobuf,
+        state.consuming_function,
+        state.connection_pid,
+        state.ack_subject
+      ])
+    end
 
     {:keep_state_and_data, []}
   end
